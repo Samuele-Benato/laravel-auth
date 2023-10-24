@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Project;
+use Illuminate\Support\Facades\Validator;
+
 class ProjectController extends Controller
 {
     /**
@@ -14,7 +17,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::paginate(5);
+        return view('admin.projects.index', compact('projects'));
     }
 
     /**
@@ -24,7 +28,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
     /**
@@ -35,7 +39,11 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $project = new Project;
+        $project->fill($data);
+        $project->save();
+        return redirect()->route('admin.projects.show', $project);
     }
 
     /**
@@ -44,9 +52,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Project $project)
     {
-        //
+        return view('admin.projects.show', compact('project'));
     }
 
     /**
@@ -55,9 +63,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
@@ -67,9 +75,11 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
-        //
+        $data = $request->all();
+        $project->update($data);
+        return redirect()->route('admin.projects.show', $project);
     }
 
     /**
@@ -78,8 +88,32 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index');
+    }
+
+    private function validation($data)
+    {
+        $validator = Validator::make(
+            $data,
+            [
+                'title' => 'required|string|max:20',
+                'description' => "required|text",
+                "image" => "required|text",
+            ],
+            [
+                'title.required' => 'Il nome è obbligatorio',
+                'title.string' => 'Il nome deve essere una stringa',
+                'title.max' => 'Il nome deve massimo di 20 caratteri',
+
+                'description.required' => 'La descrizione è obbligatoria',
+
+                'image.required' => 'L\'immagine è obbligatoria',
+            ]
+        )->validate();
+
+        return $validator;
     }
 }
