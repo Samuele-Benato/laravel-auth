@@ -26,18 +26,17 @@
                                 <td scope="col">{{ $project->title }}</td>
                                 <td scope="col">{{ $project->description }}</td>
                                 <td scope="col">
-                                    <a class="btn btn-sm btn-success" href="{{ route('admin.projects.show', $project) }}">
+                                    <a class="btn btn-sm btn-success my-1"
+                                        href="{{ route('admin.projects.show', $project) }}">
                                         Dettaglio
                                     </a>
-                                    <form action="{{ route('admin.projects.destroy', $project) }}" method="POST"
-                                        class="mx-1">
-                                        @method('DELETE')
-                                        @csrf
-                                        <button class="btn btn-danger btn-sm my-2">Elimina</button>
-                                    </form>
+
+                                    <button class="btn btn-danger btn-sm my-1" data-bs-toggle="modal"
+                                        data-bs-target="#delete-modal-{{ $project->id }}">
+                                        Elimina
+                                    </button>
                                 </td>
                             </tr>
-
                         @empty
                             <h3>Nessun project trovato</h3>
                         @endforelse
@@ -46,6 +45,38 @@
                 {{ $projects->links('pagination::bootstrap-5') }}
             </div>
         </div>
+        @foreach ($projects as $project)
+            <div class="modal fade" id="delete-modal-{{ $project->id }}" tabindex="-1"
+                aria-labelledby="delete-modal-{{ $project->id }}-label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="delete-modal-{{ $project->id }}-label">
+                                Conferma eliminazione
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            Sei sicuro di voler eliminare la project {{ $project->title }} con ID
+                            {{ $project->id }}? <br />
+                            L'operazione non è reversibile
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Annulla
+                            </button>
 
+                            <form action="{{ route('admin.projects.destroy', $project) }}" method="POST">
+                                @method('DELETE') @csrf
+
+                                <button type="submit" class="btn btn-danger">
+                                    Elimina
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </section>
 @endsection

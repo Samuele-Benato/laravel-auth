@@ -39,7 +39,8 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data = $this->validation($request->all());
+
         $project = new Project;
         $project->fill($data);
         $project->save();
@@ -65,6 +66,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+
         return view('admin.projects.edit', compact('project'));
     }
 

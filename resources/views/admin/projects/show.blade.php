@@ -24,16 +24,15 @@
                         <a class="btn btn-warning btn-sm" href= "{{ route('admin.projects.edit', $project) }}">
                             Modifica
                         </a>
-                        <form class="d-inline-block ms-auto" action="{{ route('admin.projects.destroy', $project) }}"
+                        {{-- <form class="d-inline-block ms-auto" action="{{ route('admin.projects.destroy', $project) }}"
                             method="POST" class="mx-1">
                             @method('DELETE')
                             @csrf
                             <button class="btn btn-danger btn-sm">Elimina</button>
-                        </form>
+                        </form> --}}
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 @endsection
