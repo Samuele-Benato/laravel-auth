@@ -26,8 +26,9 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $data = $this->validation($request->all());
         return view('admin.projects.create');
     }
 
